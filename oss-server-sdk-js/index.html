@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>upload</title>
+		<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+ 
+		<style type="text/css">
+			.upload{
+				width: 100px;
+				height: 100px;
+				text-align: center;
+				line-height: 90px;
+				font-size: 50px;
+				border: 1px solid #ccc;
+			}
+		</style>
+	</head>
+	<body>
+	<div class="panel panel-primary">
+	  <div class="panel-heading">oss-server JavaScript 上传示例</div>
+	  <div class="panel-body">
+		<div style="width:100%; height:150px;">
+			<!--dom需要设置宽高，上传插件依赖容器宽高，自动覆盖-->
+			<div style="float:left;"><div class="upload" id="J_upload">+</div></div>
+			<div style="float:left;">
+				<textarea style="height:100px;width:1024px;margin-left:10px;" id="txtUpload"></textarea>
+			</div>
+		</div>
+	  </div> 
+	</div>
+	 
+	</body>
+	<script src="upload.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var upp = new Upload({
+			el:'#J_upload', //传入#ID值或者dom
+			action:'http://192.168.0.7:18000/oss/material/test/uploadMaterial', //上传接口，必填！！！
+			data:{
+				module:'/cms'
+			},//其余参数
+			multiple:true,
+//			accept:'image/jpg', //接受的文件类型
+			disabled:false,
+//			maxSize:'100', //文件大小限制，单位为 byte
+			formatError:function(type,file){
+				console.log(type,file)
+			},
+			oversize:function(size,file){
+				console.log('Current file size:'+size+',oversize!')
+				console.log(file)
+			},
+			beforeUpload:function(files){
+//				console.log(files)
+			},
+			success:function(result){
+				$("#txtUpload").val(JSON.stringify(result));
+				console.log('success000',result)
+			},
+			error:function(error){
+				console.log('error',error)
+			}
+		})
+		 
+	</script>
+</html>

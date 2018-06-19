@@ -7,9 +7,10 @@
 
 package com.xiaominfo.oss.config;
 
-import com.xiaominfo.oss.filter.HttpBasicSecurityFilter;
+import com.xiaominfo.oss.filter.GlobalRequestMappingFilter;
+import com.xiaominfo.oss.filter.LoginInterceptor;
 import com.xiaominfo.oss.service.MaterialConfig;
-import com.xiaominfo.oss.service.MaterialConfigImpl;
+import com.xiaominfo.oss.service.impl.MaterialConfigImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -44,6 +46,11 @@ public class MaterialConfiguration implements WebMvcConfigurer {
         converters.add(new JsonpMessageConverter());
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoginInterceptor());
+    }
+
     @Bean
     public MaterialConfig materialConfig(){
         MaterialConfigImpl materialConfig=new MaterialConfigImpl();
@@ -68,8 +75,9 @@ public class MaterialConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public HttpBasicSecurityFilter securityFilter(){
-        return new HttpBasicSecurityFilter();
+    public GlobalRequestMappingFilter globalRequestMappingFilter(){
+        return new GlobalRequestMappingFilter();
     }
+
 
 }

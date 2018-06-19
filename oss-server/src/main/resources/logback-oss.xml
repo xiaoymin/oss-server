@@ -25,7 +25,7 @@
         <appender-ref ref="STDOUT" />
     </root>
     <!-- 级别依次为【从高到低】：FATAL > ERROR > WARN > INFO > DEBUG > TRACE  -->
-    <logger name="com.lishicloud.oss" level="DEBUG">
+    <logger name="com.xiaominfo.oss" level="DEBUG">
         <appender-ref ref="syslog" />
     </logger>
     <logger name="org.springframework.web" level="INFO">

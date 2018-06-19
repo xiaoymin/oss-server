@@ -7,13 +7,16 @@
 
 package com.xiaominfo.oss.api;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.google.common.collect.Lists;
 import com.xiaominfo.oss.domain.FileInfo;
-import com.xiaominfo.oss.domain.RestfulMessage;
+import com.xiaominfo.oss.common.pojo.RestfulMessage;
 import com.xiaominfo.oss.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -25,8 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -56,9 +57,7 @@ public class OSSApplication {
         log.info("dir:{}",dir);
         List<FileInfo> fileInfos= Lists.newArrayList();
         File rootFile=new File(root);
-        int start=rootFile.getAbsolutePath().length();
         log.info(rootFile.getAbsolutePath());
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (StrUtil.isBlank(dir)){
             //如果是空的话,直接获取当前根目录
              fileInfos.addAll(getFileInfos(rootFile,rootFile));
@@ -125,12 +124,14 @@ public class OSSApplication {
     private List<FileInfo> getFileInfos(File dirFile,File root){
         int start=root.getAbsolutePath().length();
         List<FileInfo> fileInfos= Lists.newArrayList();
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         File[] files=dirFile.listFiles();
+        if (ArrayUtil.isEmpty(files)){
+            return fileInfos;
+        }
         for (File file:files){
-            Calendar calendar=Calendar.getInstance();
-            calendar.setTimeInMillis(file.lastModified());
-            FileInfo fileInfo=new FileInfo(invokeUri+file.getName(),file.getName(),sdf.format(calendar.getTime()), FileUtils.byteToString(FileUtils.getFileSize(file)));
+            FileInfo fileInfo=new FileInfo(invokeUri+file.getName(),file.getName()
+                    ,DateUtil.date(file.lastModified()).toString(DatePattern.NORM_DATETIME_PATTERN)
+                    , FileUtils.byteToString(FileUtils.getFileSize(file)));
             fileInfo.setType(FileUtils.getFileType(file));
             fileInfo.setMediaType(FileUtils.getMediaType(file));
             if (file.isDirectory()){

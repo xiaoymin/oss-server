@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2017 Zhejiang LISHI Technology CO.,LTD.
+ * Copyright (C) 2017 Zhejiang xiaominfo Technology CO.,LTD.
  * All rights reserved.
- * Official Web Site: http://www.lishicloud.com.
+ * Official Web Site: http://www.xiaominfo.com.
+ * Developer Web Site: http://open.xiaominfo.com.
  */
 package com.xiaominfo.oss.utils;
 

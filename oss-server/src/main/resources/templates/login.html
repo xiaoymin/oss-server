@@ -3,18 +3,73 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Login Page</title>
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <title>登录-OSS-Server 在线存储管理系统 </title>
+    <script src="/lib/jquery/jquery.min.js"></script>
+    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/layer/layer.js"></script>
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  />
+    <link rel="stylesheet" href="/lib/admin/css/sb-admin-2.min.css"  />
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"  />
+    <link rel="stylesheet" href="/lib/metisMenu/metisMenu.min.css"  />
 </head>
 <body>
-<h3>Login with Username and Password</h3>
-<form name='f' action='/login' method='POST'>
-    <table>
-        <tr><td>User:</td><td><input type='text' name='username' value=''></td></tr>
-        <tr><td>Password:</td><td><input type='password' name='password'/></td></tr>
-        <tr><td colspan='2'><input name="submit" type="submit" value="Login"/></td></tr>
-        <input name="_csrf" type="hidden" value="79d120c1-bf08-43d8-b8cb-063a20e6d1a6" />
-    </table>
-</form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><img src="/images/logo.png" alt="" /> OSS-Server 在线存储管理系统</h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="请输入用户名" name="username" type="email" autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="请输入密码" name="password" type="password" value="">
+                            </div>
+                            <!-- Change this to a button or input when using this as a form -->
+                            <a href="javascript:void(0)" id="login" class="btn btn-lg btn-success btn-block">登  录</a>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(document).keydown(function(event){
+            if(event.keyCode == 13){ //绑定回车
+                $('#login').click();
+            }
+        });
+
+        $("#login").on("click",function (e) {
+            e.preventDefault();
+            var data={username:$("input[name=username]").val(),password:$("input[name=password]").val()};
+            if(!data.username){
+                layer.msg("请输入用户名");
+                return false;
+            }
+            if(!data.password){
+                layer.msg("请输入密码");
+                return false;
+            }
+            $.post("/login",data,function (data) {
+                if(data.code==8200){
+                    layer.msg("登录成功",function () {
+                        window.location="/index";
+                    })
+                }else{
+                    layer.msg(data.message);
+                }
+            })
+        })
+    })
+
+</script>
+
 </body>
 </html>

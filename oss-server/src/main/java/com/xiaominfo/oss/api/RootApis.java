@@ -7,6 +7,7 @@
 
 package com.xiaominfo.oss.api;
 
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
@@ -14,7 +15,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import com.xiaominfo.oss.domain.RestfulMessage;
+import com.xiaominfo.oss.common.pojo.RestfulMessage;
 import com.xiaominfo.oss.exception.AssemblerException;
 import com.xiaominfo.oss.exception.ErrorCable;
 import com.xiaominfo.oss.exception.ErrorConstant;
@@ -77,21 +78,43 @@ public class RootApis {
         if (e!=null){
             String msg=e.getMessage();
             if (StrUtil.isEmpty(msg)){
-                restfulMessage.setCode(String.valueOf(ErrorConstant.INTERNAL_SERVER_ERROR));
+                restfulMessage.setCode(ErrorConstant.INTERNAL_SERVER_ERROR);
                 restfulMessage.setMessage(msg);
             }else if(msg.contains("|")){
                 String[] em= StrUtil.split(msg,"|");
-                restfulMessage.setCode(em[0]);
+                restfulMessage.setCode(Integer.parseInt(em[0]));
                 restfulMessage.setMessage(em[1]);
             }else {
-                restfulMessage.setCode(String.valueOf(ErrorConstant.INTERNAL_SERVER_ERROR));
+                restfulMessage.setCode(ErrorConstant.INTERNAL_SERVER_ERROR);
                 restfulMessage.setMessage(e.getMessage());
             }
         }else{
-            restfulMessage.setCode(String.valueOf(ErrorConstant.INTERNAL_SERVER_ERROR));
+            restfulMessage.setCode(ErrorConstant.INTERNAL_SERVER_ERROR);
             restfulMessage.setMessage("未知错误");
         }
         return restfulMessage;
+    }
+
+    /***
+     * 验证文件夹名称
+     * @param projectName
+     */
+    protected void validateProjectName(String projectName){
+        if (StrUtil.isBlank(projectName)){
+            throw new AssemblerException(new ErrorCable(ErrorConstant.REQUEST_PARAMS_NOT_VALID,"project name can't be empty!"));
+        }
+        String regex="^.*?(\\\\|\\/|\\:|\\*|\\?|\\？|\\\"|\\“|\\”|\\>|\\<|\\|).*";
+        if (ReUtil.isMatch(regex,projectName)){
+            throw new AssemblerException(new ErrorCable(ErrorConstant.REQUEST_PARAMS_NOT_VALID,"The name of the file can not contain any of the following characters: / /: *?<>|"));
+        }
+        //不能包含\s字符
+        //不能包含中文
+        regex=".*?[\\u4e00-\\u9fa5\\s].*";
+        if (ReUtil.isMatch(regex,projectName)){
+            throw new AssemblerException(new ErrorCable(ErrorConstant.REQUEST_PARAMS_NOT_VALID,"The name of the file does not contain Chinese and space"));
+        }
+
+
     }
 
     /***
@@ -109,7 +132,7 @@ public class RootApis {
     }
 
     protected void successResultCode(RestfulMessage restfulMessage){
-        restfulMessage.setCode(String.valueOf(ErrorConstant.SUCCESS));
+        restfulMessage.setCode(ErrorConstant.SUCCESS);
         restfulMessage.setMessage("Success");
     }
 

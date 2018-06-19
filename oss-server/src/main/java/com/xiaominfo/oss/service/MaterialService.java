@@ -10,6 +10,9 @@ import com.xiaominfo.oss.domain.FileBinaryRequest;
 import com.xiaominfo.oss.domain.FileBinaryResponse;
 import com.xiaominfo.oss.domain.FileStream;
 import com.xiaominfo.oss.domain.RemoteResult;
+import com.xiaominfo.oss.module.model.OSSAppInfo;
+import com.xiaominfo.oss.module.model.OSSDeveloper;
+import com.xiaominfo.oss.module.model.OSSInformation;
 import org.apache.tomcat.util.codec.DecoderException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,7 +44,7 @@ public interface MaterialService {
      * @param fileBinaryRequests
      * @return
      */
-    List<FileBinaryResponse> saveAndStore(File projectDirectory,List<FileBinaryRequest> fileBinaryRequests) throws IOException;
+    List<FileBinaryResponse> saveAndStore(OSSInformation ossInformation,OSSDeveloper ossDeveloper, OSSAppInfo ossApp, File projectDirectory, List<FileBinaryRequest> fileBinaryRequests) throws IOException;
 
 
     /***
@@ -50,9 +53,9 @@ public interface MaterialService {
      * @param multipartFile
      * @return
      */
-    List<FileBinaryResponse> saveAndStore(File projectDirectory, MultipartFile[] multipartFile) throws IOException;
+    List<FileBinaryResponse> saveAndStore(OSSInformation ossInformation,OSSDeveloper ossDeveloper, OSSAppInfo ossApp, File projectDirectory, MultipartFile[] multipartFile) throws IOException;
 
 
-    List<FileBinaryResponse> saveAndStoreBySys(File projectDirectory, MultipartFile[] multipartFile) throws IOException;
+    List<FileBinaryResponse> saveAndStoreBySys(OSSInformation ossInformation,File projectDirectory, MultipartFile[] multipartFile) throws IOException;
 
 }

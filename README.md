@@ -1,4 +1,8 @@
-# oss-server
+![](https://static.oschina.net/uploads/img/201806/18222124_VR9L.png)
+
+**项目文档地址：http://oss-server.mydoc.io**
+
+**oss-server项目交流群：608374991**
 
 ## 项目介绍
 

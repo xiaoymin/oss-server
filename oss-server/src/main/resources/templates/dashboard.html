@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>主面板</title>
+    <script src="/lib/jquery/jquery.min.js"></script>
+    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/layer/layer.js"></script>
+    <script src="/lib/plugin/jquery.tools.plugins.js"></script>
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  />
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"  />
+    <link rel="stylesheet" href="/lib/admin/css/sb-admin-2.min.css"  />
+    <style type="text/css">
+        .huge {
+            font-size: 28px;
+        }
+        .hugo-line{
+            margin-top:10px;
+        }
+    </style>
+</head>
+<body style="overflow-x: hidden;background-color: white;">
+<div class="row">
+    <div class="col-lg-12" >
+        <div style="margin-top: 5px;">
+            <ol class="breadcrumb">
+                <li><a href="#">主页</a></li>
+                <li><a href="/oss/dashboard">主面板</a></li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-lg-12" >
+        <div class="col-lg-3 col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-user-plus fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">${devs}</div>
+                            <div class="hugo-line">开发者</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="/oss/developer">
+                    <div class="panel-footer">
+                        <span class="pull-left">查看详情</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-cube fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">${apps}</div>
+                            <div class="hugo-line">应用</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="/oss/appinfo">
+                    <div class="panel-footer">
+                        <span class="pull-left">查看详情</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-file-code-o fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">${files}</div>
+                            <div class="hugo-line">对象</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="javascript:void(0)">
+                    <div class="panel-footer">
+                        <span class="pull-left"></span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-support fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">${totalUseSpace}</div>
+                            <div class="hugo-line">占用空间</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="javascript:void(0)">
+                    <div class="panel-footer">
+                        <span class="pull-left"></span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

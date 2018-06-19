@@ -76,13 +76,18 @@ public class FileUtils {
         BigDecimal fullSize=new BigDecimal(fileBytes);
         //mb
         BigDecimal mbSize=new BigDecimal(MB_SIZE);
-        float dvsize=fullSize.divide(mbSize,2,BigDecimal.ROUND_HALF_UP).floatValue();
-        if (dvsize>1){
-            byteStr.append(dvsize).append("MB");
+        float gbsize=fullSize.divide(new BigDecimal(GB_SIZE),2,BigDecimal.ROUND_HALF_UP).floatValue();
+        if (gbsize>1){
+            byteStr.append(gbsize).append("GB");
         }else{
-            //kb显示
-            BigDecimal kbSize=new BigDecimal(KB_SIZE);
-            byteStr.append(fullSize.divide(kbSize,2,BigDecimal.ROUND_HALF_UP).floatValue()).append("KB");
+            float dvsize=fullSize.divide(mbSize,2,BigDecimal.ROUND_HALF_UP).floatValue();
+            if (dvsize>1){
+                byteStr.append(dvsize).append("MB");
+            }else{
+                //kb显示
+                BigDecimal kbSize=new BigDecimal(KB_SIZE);
+                byteStr.append(fullSize.divide(kbSize,2,BigDecimal.ROUND_HALF_UP).floatValue()).append("KB");
+            }
         }
         return byteStr.toString();
     }

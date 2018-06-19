@@ -1,0 +1,286 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>开发者管理</title>
+    <script src="/lib/jquery/jquery.min.js"></script>
+    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/layer/layer.js"></script>
+    <script src="/lib/plugin/jquery.tools.plugins.js"></script>
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  />
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"  />
+
+    <script src="/lib/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/lib/bootstrap-table/bootstrap-table-locale-all.min.js"></script>
+    <link rel="stylesheet" href="/lib/bootstrap-table/bootstrap-table.min.css"  />
+
+</head>
+<body style="overflow-x: hidden">
+<div class="btn-group" id="toolbar">
+    <a class="btn btn-info" href="javascript:void(0)" id="btnAddUser">
+        <i class="fa fa-user-plus"></i> 新建开发者</a>
+    <a class="btn btn-danger" href="javascript:void(0)" id="btnBatchDelete">
+        <i class="fa fa-trash-o fa-lg"></i> 批量删除</a>
+</div>
+<div class="row">
+    <div class="col-lg-12" >
+        <div style="margin-top: 5px;">
+            <ol class="breadcrumb">
+                <li><a href="#">主页</a></li>
+                <li><a href="/oss/developer">开发者管理</a></li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-lg-12" >
+        <table id="grid"></table>
+    </div>
+</div>
+
+
+<div id="developerFormDiv" style="display: none;">
+    <form class="form-horizontal m-t" action="" id="developerForm"  style="width: 95%;margin-top:10px;">
+        <input type="hidden" name="id"  />
+        <div class="form-group">
+            <label class="col-sm-3 control-label">姓名</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="name" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">邮箱</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="email" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">手机号</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="tel" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">描述</label>
+            <div class="col-sm-8">
+                <textarea rows="6" class="form-control" name="intro"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-3">
+                <button class="btn btn-primary" type="button" id="btnDeveloperInfoSave"><i class="fa fa-save" aria-hidden="true"></i> 保存</button>
+                <button class="btn btn-primary" type="button" id="btnDeveloperInfoCancel"><i class="fa fa-close" aria-hidden="true"></i> 取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        var $table;
+        //初始化bootstrap-table的内容
+        function InitDeveloperTable () {
+            //记录页面bootstrap-table全局变量$table，方便应用
+            var queryUrl = '/oss/developer/queryByPage';
+            $table = $('#grid').bootstrapTable({
+                url: queryUrl,                      //请求后台的URL（*）
+                method: 'GET',                      //请求方式（*）
+                //toolbar: '#toolbar',              //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: true,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页,并记录
+                pageSize: 10,                     //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: true,                      //是否显示表格搜索
+                strictSearch: true,
+                showColumns: false,                  //是否显示所有的列（选择显示的列）
+                showRefresh: false,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: false,                //是否启用点击选中行
+                height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                showToggle: false,                   //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                locale:"zh-CN",
+                toolbarAlign:"left",
+                toolbar:"#toolbar",
+                detailView: false,                  //是否显示父子表
+                //得到查询的参数
+                queryParams : function (params) {
+                    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    var temp = {
+                        rows: params.limit,                         //页面大小
+                        page: (params.offset / params.limit) + 1,   //页码
+                        sort: params.sort,      //排序列名
+                        sortOrder: params.order //排位命令（desc，asc）
+                    };
+                    return temp;
+                },
+                columns: [{
+                    checkbox: true,
+                    visible: true                  //是否显示复选框
+                }, {
+                    field: 'name',
+                    title: '姓名',
+                    sortable: true
+                }, {
+                    field: 'tel',
+                    title: '手机',
+                    sortable: true
+                }, {
+                    field: 'email',
+                    title: '邮箱',
+                    sortable: true
+                }, {
+                    field: 'appid',
+                    title: 'appid'
+                }, {
+                    field: 'appsecret',
+                    title: 'appsecret'
+                }, {
+                    field: 'useSpaceStr',
+                    title: '已使用空间',
+                    sortable: true
+                }, {
+                    field: 'createTime',
+                    title: '创建时间',
+                    sortable: true
+                }, {
+                    field:'ID',
+                    title: '操作',
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: actionFormatter
+                }],
+                responseHandler:function (ret) {
+                    var retJson={total:ret.count,rows:ret.data};
+                    return retJson;
+                },
+                onLoadSuccess: function () {
+                    operation();
+                },
+                onLoadError: function () {
+                    layer.msg("数据加载失败！");
+                },
+                onDblClickRow: function (row, $element) {
+                    var id = row.ID;
+                },
+            });
+        }
+
+
+        function actionFormatter(value, row, index) {
+            var id = row.id;
+            var result = "";
+            result += "<div class=\"btn-group\"> ";
+            result += "<a href='javascript:;' class='btn btn-default btn-sm row-edit'  data-id='"+id+"' ><i class=\"fa fa-cog\"></i> 编辑</a> &nbsp;&nbsp;&nbsp;";
+            result += "<a href='javascript:void(0);' class='btn btn-sm btn-danger row-delete' data-id='"+id+"'><i class=\"fa fa-trash-o fa-small\"></i> 删除</a>";
+            result+="</div>";
+            return result;
+        }
+        InitDeveloperTable();
+
+        function operation() {
+            $.log("operation...")
+            $(".row-delete").on("click",function (e) {
+                e.preventDefault();
+                var that=$(this);
+                var id=that.data("id");
+                layer.confirm("确定删除该开发者吗?",function () {
+                    $.post("/oss/developer/delete",{id:id},function (d) {
+                        $.handle(d,function (formdata) {
+                            layer.msg("删除成功")
+                            $table.bootstrapTable("refresh",{});
+                        })
+                    })
+                })
+
+            })
+            $(".row-edit").on("click",function (e) {
+                e.preventDefault();
+                var id=$(this).data("id");
+                $.post("/oss/developer/queryById",{id:id},function (d) {
+                    $.handle(d,function (formdata) {
+                        $.setForm(formdata,"#developerForm",",")
+                        var roleBasicDivc=$("#developerFormDiv");
+                        layer.open({
+                            type: 1,
+                            title: "编辑开发者",
+                            closeBtn: 0,
+                            area: '516px',
+                            shadeClose: true,
+                            content: roleBasicDivc
+                        });
+                    })
+                })
+            })
+        }
+
+
+
+        $("#btnAddUser").on("click",function (e) {
+            e.preventDefault();
+            layer.msg("新增用户")
+            var roleBasicDivc=$("#developerFormDiv");
+            $("#developerForm")[0].reset();
+            layer.open({
+                type: 1,
+                title: "新增开发者",
+                closeBtn: 0,
+                area: '516px',
+                shadeClose: true,
+                content: roleBasicDivc
+            });
+        })
+
+        $("#btnDeveloperInfoSave").on("click",function (e) {
+            e.preventDefault();
+            var json=$("#developerForm").json();
+            $.log(json)
+            $.post("/oss/developer/merge",json,function (d) {
+                $.handle(d,function (data) {
+                    layer.msg("保存成功");
+                    layer.closeAll();
+                    $table.bootstrapTable("refresh",{});
+                })
+            })
+
+        })
+        $("#btnDeveloperInfoCancel").on("click",function (e) {
+            e.preventDefault();
+            layer.closeAll();
+            $("#developerForm")[0].reset();
+        })
+
+        $("#btnBatchDelete").on("click",function (e) {
+            e.preventDefault();
+            var seles=$table.bootstrapTable("getAllSelections");
+            $.log(seles)
+            if(seles==null||seles.length==0){
+                layer.msg("请选择删除的开发者");
+                return false;
+            }
+            var ids=[];
+            $.each(seles,function (i, s) {
+                ids.push(s.id);
+            })
+            $.log(ids);
+            layer.confirm("确定删除选中开发者吗?",function () {
+                $.post("/oss/developer/delete",{id:ids.join(",")},function (d) {
+                    $.handle(d,function (formdata) {
+                        layer.msg("删除成功")
+                        $table.bootstrapTable("refresh",{});
+                    })
+                })
+            })
+        })
+    })
+</script>
+</body>
+</html>

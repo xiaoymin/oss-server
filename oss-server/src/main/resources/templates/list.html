@@ -4,14 +4,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <title>文件列表</title>
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="/lib/jquery/jquery.min.js"></script>
+    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="/layer/layer.js"></script>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  />
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css"  />
     <link rel="stylesheet" type="text/css" href="/grid/css/normalize.css" />
-
     <link rel="stylesheet" type="text/css" href="/grid/css/grid.css" />
     <style type="text/css">
         .btn-primary-new {
@@ -24,13 +22,18 @@
         }
     </style>
 </head>
-<body style="overflow-y: hidden;">
+<body style="overflow: hidden;">
 
-
-<div class="panel panel-default">
-    <!-- Default panel contents -->
-    <div class="panel-heading">${appName}</div>
-    <div class="panel-body">
+<div class="row">
+    <div class="col-lg-12" >
+        <div style="margin-top: 5px;">
+            <ol class="breadcrumb">
+                <li><a href="#">主页</a></li>
+                <li><a href="#">对象列表</a></li>
+            </ol>
+        </div>
+    </div>
+    <div class="col-lg-12" style="height: 50px;">
         <div>
             <div style="width: 80%;float: left;">
                 <button type="button" id="btnUpload" class="btn btn-primary"><i class="fa fa-cloud-upload" aria-hidden="true" style=" color: #faf9f9;font-size: 16px;"></i> 本地上传</button>
@@ -46,33 +49,34 @@
             </div>
         </div>
     </div>
-    <div style=" height: 520px;overflow-y: auto;">
-        <div id="listView" <#if view!="list"> class="view-display" </#if>  >
-            <!-- Table -->
-            <table class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <td style="width: 5%;"><input type="checkbox" aria-label="..." /> 全选</td>
-                    <td>文件名称</td>
-                    <td>类型</td>
-                    <td>最后修改时间</td>
-                    <td>大小</td>
-                </tr>
-                </thead>
-                <tbody>
-                <#list list as file>
+    <div class="col-lg-12">
+        <div style=" height: 520px;overflow-y: auto;">
+                <div id="listView" <#if view!="list"> class="view-display" </#if>  >
+                <!-- Table -->
+                <table class="table table-striped table-hover">
+                    <thead>
                     <tr>
-                        <td style="text-align: center;"><input type="checkbox" /></td>
-                        <td><a href="${file.url}">${file.name}</a></td>
-                        <td>${file.type}</td>
-                        <td>${file.lastModifiedTime}</td>
-                        <td>${file.size}</td>
+                        <td style="width: 5%;"><input type="checkbox" aria-label="..." /> 全选</td>
+                        <td>文件名称</td>
+                        <td>类型</td>
+                        <td>最后修改时间</td>
+                        <td>大小</td>
                     </tr>
-                </#list>
-                </tbody>
-            </table>
-        </div>
-        <div id="gridView" <#if view=="list"> class="view-display" </#if> >
+                    </thead>
+                    <tbody>
+                    <#list list as file>
+                        <tr>
+                            <td style="text-align: center;"><input type="checkbox" /></td>
+                            <td><a href="${file.url}" <#if file.mediaType!="dir"> target="_blank" </#if>>${file.name}</a></td>
+                            <td>${file.type}</td>
+                            <td>${file.lastModifiedTime}</td>
+                            <td>${file.size}</td>
+                        </tr>
+                    </#list>
+                    </tbody>
+                </table>
+            </div>
+            <div id="gridView" <#if view=="list"> class="view-display" </#if> >
             <main>
                 <section class="content content--nandi">
                     <div class="grid">
@@ -92,49 +96,49 @@
                                         </h3>
                                     </div>
                                 </div>
-                            <#elseif file.mediaType=="text">
-                                <div class="grid__item">
-                                    <div class="folder folder--nandi">
-                                        <div class="folder__icon folder__icon--perspective" title="${file.name}">
-                                            <i class="fa fa-file" aria-hidden="true" style="font-size: 90px;color: #75aef7;"></i>
-                                        </div>
-                                        <h3 class="folder__caption"><#if file.name?length gt 10>
-                                            ${file.name[0..10]}...
-                                            <#else>
-                                                ${file.name}
-                                        </#if></h3>
-                                    </div>
-                                </div>
-                            <#elseif file.mediaType=="xls" || file.mediaType=="xlsx">
-                                <div class="grid__item">
-                                    <div class="folder folder--nandi">
-                                        <div class="folder__icon folder__icon--perspective" title="${file.name}">
-                                            <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 90px;color: #75aef7;"></i>
-                                        </div>
-                                        <h3 class="folder__caption">
-                                            <#if file.name?length gt 10>
+                                <#elseif file.mediaType=="text">
+                                    <div class="grid__item">
+                                        <div class="folder folder--nandi">
+                                            <div class="folder__icon folder__icon--perspective" title="${file.name}">
+                                                <i class="fa fa-file" aria-hidden="true" style="font-size: 90px;color: #75aef7;"></i>
+                                            </div>
+                                            <h3 class="folder__caption"><#if file.name?length gt 10>
                                                 ${file.name[0..10]}...
                                                 <#else>
                                                     ${file.name}
-                                            </#if>
-                                        </h3>
-                                    </div>
-                                </div>
-                            <#else>
-                                <div class="grid__item">
-                                    <div class="folder folder--nandi">
-                                        <div class="folder__icon folder__icon--perspective" title="${file.name}">
-                                            <i class="fa fa fa-file" aria-hidden="true" style="font-size: 90px;color: #f7d075;"></i>
+                                            </#if></h3>
                                         </div>
-                                        <h3 class="folder__caption">
-                                            <#if file.name?length gt 10>
-                                                ${file.name[0..10]}...
-                                                <#else>
-                                                    ${file.name}
-                                            </#if>
-                                        </h3>
                                     </div>
-                                </div>
+                                    <#elseif file.mediaType=="xls" || file.mediaType=="xlsx">
+                                        <div class="grid__item">
+                                            <div class="folder folder--nandi">
+                                                <div class="folder__icon folder__icon--perspective" title="${file.name}">
+                                                    <i class="fa fa-file-excel-o" aria-hidden="true" style="font-size: 90px;color: #75aef7;"></i>
+                                                </div>
+                                                <h3 class="folder__caption">
+                                                    <#if file.name?length gt 10>
+                                                        ${file.name[0..10]}...
+                                                        <#else>
+                                                            ${file.name}
+                                                    </#if>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <#else>
+                                            <div class="grid__item">
+                                                <div class="folder folder--nandi">
+                                                    <div class="folder__icon folder__icon--perspective" title="${file.name}">
+                                                        <i class="fa fa fa-file" aria-hidden="true" style="font-size: 90px;color: #f7d075;"></i>
+                                                    </div>
+                                                    <h3 class="folder__caption">
+                                                        <#if file.name?length gt 10>
+                                                            ${file.name[0..10]}...
+                                                            <#else>
+                                                                ${file.name}
+                                                        </#if>
+                                                    </h3>
+                                                </div>
+                                            </div>
                             </#if>
                         </#list>
 
@@ -144,8 +148,11 @@
 
         </div>
     </div>
-
+    </div>
+    <!-- /.col-lg-12 -->
 </div>
+
+
 
 <div style="display: none;position: absolute;">
 

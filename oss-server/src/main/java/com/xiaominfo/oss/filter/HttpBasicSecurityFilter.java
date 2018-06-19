@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:xiaoymin@foxmail.com">xiaoymin@foxmail.com</a> 
  * 2018/06/11 11:43
  */
+@Deprecated
 public class HttpBasicSecurityFilter implements Filter{
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
